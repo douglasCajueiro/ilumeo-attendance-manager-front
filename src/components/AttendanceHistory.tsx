@@ -151,7 +151,7 @@ const calculateWorkDayTime = (startTime: Date, endTime: Date) => {
     if (inMinutes < 10) return `0h 0${Math.floor(inMinutes)}m`
     if (inMinutes < 60) return `0h ${Math.floor(inMinutes)}m`
     const totalHours = Math.floor(inMinutes / 60)
-    const totalMinutes = inMinutes - (totalHours * 60)
-    const getTotalMinutes = totalMinutes < 10 ? "0" + totalMinutes : Math.floor(totalMinutes)
+    const totalMinutes = Math.floor(inMinutes - (totalHours * 60))
+    const getTotalMinutes = totalMinutes < 10 ? "0" + totalMinutes : totalMinutes
     return `${totalHours}h ${getTotalMinutes}m`
 }

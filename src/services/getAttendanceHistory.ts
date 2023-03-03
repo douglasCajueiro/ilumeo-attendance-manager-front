@@ -2,6 +2,11 @@ import { toast } from "react-toastify"
 import api from "../http-common"
 import { EmployeeHistoryDB } from "../interfaces/interfaces"
 
+const now = new Date();
+const year = now.getFullYear()
+const month = now.getMonth()
+const day = now.getDate()
+
 export const getAttendanceHistory = async (employeeCode: string) => {
     await api.get<EmployeeHistoryDB>(`employees/${employeeCode}/attendanceHistory`)
         .then((response) => {
