@@ -1,6 +1,7 @@
 import { EmployeeHistoryStorage } from "../interfaces/interfaces"
 import { getAttendanceHistory } from "../services/getAttendanceHistory"
 import { registerWorkDay } from "../services/registerWorkDay"
+import { calculateWorkDayTime, formatDateDDMMYY } from "../services/timeHandlers"
 
 
 export const AttendanceHistory = () => {
@@ -67,7 +68,7 @@ export const AttendanceHistory = () => {
                 .map(({ work_day_start, work_day_end, id }) => (
                     <div key={id} style={Styles.workDay}>
                         <span style={Styles.date}>
-                            {extractDate(new Date(work_day_start))}
+                            {formatDateDDMMYY(new Date(work_day_start))}
                         </span>
                         <span style={Styles.time}>
                             <b>
@@ -140,20 +141,20 @@ const Styles = {
     }
 }
 
-const extractDate = (fullWorkDay: Date) => {
-    const day = fullWorkDay.getDate()
-    const month = fullWorkDay.getMonth() + 1
-    const year = fullWorkDay.getFullYear().toString().slice(-2)
-    return `${day >= 10 ? day : "0" + day}/${month >= 10 ? month : "0" + month}/${year}`
-}
+// const extractDate = (fullWorkDay: Date) => {
+//     const day = fullWorkDay.getDate()
+//     const month = fullWorkDay.getMonth() + 1
+//     const year = fullWorkDay.getFullYear().toString().slice(-2)
+//     return `${day >= 10 ? day : "0" + day}/${month >= 10 ? month : "0" + month}/${year}`
+// }
 
-const calculateWorkDayTime = (startTime: Date, endTime: Date) => {
-    const elapsedMiliseconds = endTime.getTime() - startTime.getTime()
-    const inMinutes = (elapsedMiliseconds / 1000) / 60
-    if (inMinutes < 10) return `0h 0${Math.floor(inMinutes)}m`
-    if (inMinutes < 60) return `0h ${Math.floor(inMinutes)}m`
-    const totalHours = Math.floor(inMinutes / 60)
-    const totalMinutes = Math.floor(inMinutes - (totalHours * 60))
-    const getTotalMinutes = totalMinutes < 10 ? "0" + totalMinutes : totalMinutes
-    return `${totalHours}h ${getTotalMinutes}m`
-}
+// const calculateWorkDayTime = (startTime: Date, endTime: Date) => {
+//     const elapsedMiliseconds = endTime.getTime() - startTime.getTime()
+//     const inMinutes = (elapsedMiliseconds / 1000) / 60
+//     if (inMinutes < 10) return `0h 0${Math.floor(inMinutes)}m`
+//     if (inMinutes < 60) return `0h ${Math.floor(inMinutes)}m`
+//     const totalHours = Math.floor(inMinutes / 60)
+//     const totalMinutes = Math.floor(inMinutes - (totalHours * 60))
+//     const getTotalMinutes = totalMinutes < 10 ? "0" + totalMinutes : totalMinutes
+//     return `${totalHours}h ${getTotalMinutes}m`
+// }
