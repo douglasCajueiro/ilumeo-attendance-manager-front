@@ -6,6 +6,7 @@ const now = new Date();
 const year = now.getFullYear()
 const month = now.getMonth()
 const day = now.getDate()
+const todayMidnight = new Date(year, month, day)
 
 export const getAttendanceHistory = async (employeeCode: string) => {
     await api.get<EmployeeHistoryDB>(`employees/${employeeCode}/attendanceHistory`)
@@ -14,9 +15,16 @@ export const getAttendanceHistory = async (employeeCode: string) => {
                 response.data.workDays.sort((a, b) => (
                     new Date(b.work_day_start).getTime() - new Date(a.work_day_start).getTime())
                 )))
+            const { workDays, id } = response.data
+            const lastDayEnd = workDays[0].work_day_end
+            const lastDayEndDate = new Date(lastDayEnd)
+
+            if (workDays.length > 0 && lastDayEndDate >= todayMidnight) {
+                localStorage.setItem("currentDayEnd", lastDayEnd)
+            }
+
             localStorage.setItem("employeeId", response.data.id)
             localStorage.setItem("employeeCode", employeeCode || "Guest")
-            const { workDays, id } = response.data
             console.log(id, workDays)
             window.location.reload()
             return response.data

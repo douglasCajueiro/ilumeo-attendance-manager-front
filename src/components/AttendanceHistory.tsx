@@ -14,19 +14,21 @@ export const AttendanceHistory = () => {
     const lastDate = history[0]
     if (lastDate.work_day_end == null) {
         localStorage.setItem("currentDayStart", lastDate.work_day_start)
+        localStorage.setItem("currentWorkDayId", lastDate.id)
         history.shift()
         localStorage.setItem("employeeHistory", JSON.stringify(history))
     }
 
     const workday = new registerWorkDay()
     const startWorkDay = async () => {
-        await workday.start(employeeId)
+        const workDayInfo = (await workday.start(employeeId))
         getAttendanceHistory(employeeCode)
 
     }
-    const endWorkDay = () => {
-        workday.end(history[0].id)
-
+    const endWorkDay = async () => {
+        const currentWorkDayId = localStorage.getItem("currentWorkDayId")
+        await workday.end(currentWorkDayId || "")
+        // getAttendanceHistory(employeeCode)
     }
 
     const exit = () => {
