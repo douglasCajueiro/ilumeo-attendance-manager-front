@@ -1,4 +1,4 @@
-import { EmployeeHistory } from "../interfaces/interfaces"
+import { EmployeeHistoryStorage } from "../interfaces/interfaces"
 
 
 export const AttendanceHistory = () => {
@@ -7,7 +7,7 @@ export const AttendanceHistory = () => {
 
 
 
-    const history: EmployeeHistory = JSON.parse(localStorage.getItem("employeeHistory") || "")
+    const history: EmployeeHistoryStorage = JSON.parse(localStorage.getItem("employeeHistory") || "")
 
     return (
         <div>
@@ -26,9 +26,9 @@ export const AttendanceHistory = () => {
                 <p style={Styles.titles}>Horas de hoje</p>
                 <button style={Styles.button}>Hora de Entrada</button>
                 <p style={Styles.titles}>Dias anteriores</p>
-                {history.workDays
+                {history
                     .sort((a, b) => (
-                        new Date(a.work_day_start).getTime() - new Date(b.work_day_start).getTime())
+                        new Date(b.work_day_start).getTime() - new Date(a.work_day_start).getTime())
                     )
                     .map(({ work_day_start, work_day_end, id }) => (
                         <div key={id} style={Styles.workDay}>

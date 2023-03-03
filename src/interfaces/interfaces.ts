@@ -1,7 +1,9 @@
-export interface EmployeeHistory {
+export interface EmployeeHistoryDB {
     workDays: workDay[]
     id: string
 }
+
+export interface EmployeeHistoryStorage extends Array<workDay> {}
 
 export interface workDay {
     id: string,

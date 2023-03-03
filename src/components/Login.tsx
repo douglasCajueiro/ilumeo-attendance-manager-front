@@ -1,16 +1,17 @@
 import { useState } from "react"
 import { toast, ToastContainer } from "react-toastify"
 import api from "../http-common"
-import { EmployeeHistory } from "../interfaces/interfaces"
+import { EmployeeHistoryDB } from "../interfaces/interfaces"
 import 'react-toastify/dist/ReactToastify.css';
 
 export const Login = () => {
     const [employeeCode, setEmployeeCode] = useState<string>()
 
     const getHistory = async () => {
-        await api.get<EmployeeHistory>(`employees/${employeeCode}/attendanceHistory`)
+        await api.get<EmployeeHistoryDB>(`employees/${employeeCode}/attendanceHistory`)
             .then((response) => {
-                localStorage.setItem("employeeHistory", JSON.stringify(response.data))
+                localStorage.setItem("employeeHistory", JSON.stringify(response.data.workDays))
+                localStorage.setItem("employeeId", JSON.stringify(response.data.id))
                 localStorage.setItem("employeeCode", employeeCode || "Guest")
                 const {workDays, id} = response.data
                 console.log(id, workDays)
