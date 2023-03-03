@@ -1,14 +1,33 @@
 import { EmployeeHistoryStorage } from "../interfaces/interfaces"
+import { getAttendanceHistory } from "../services/getAttendanceHistory"
+import { registerWorkDay } from "../services/registerWorkDay"
 
 
 export const AttendanceHistory = () => {
 
-    // const [employeeCode, setEmployeeCode] = useState<string>()
-
-
-
     const history: EmployeeHistoryStorage = JSON.parse(localStorage.getItem("employeeHistory") || "")
     const employeeCode: string = localStorage.getItem("employeeCode") || "Funcionário"
+    const employeeId: string = localStorage.getItem("employeeId") || "id"
+    const currentDayStart: string = localStorage.getItem("currentDayStart") || ""
+    const dayStarted = currentDayStart != "" ? new Date(currentDayStart) : null
+
+    const lastDate = history[0]
+    if (lastDate.work_day_end == null) {
+        localStorage.setItem("currentDayStart", lastDate.work_day_start)
+        history.shift()
+        localStorage.setItem("employeeHistory", JSON.stringify(history))
+    }
+
+    const workday = new registerWorkDay()
+    const startWorkDay = async () => {
+        await workday.start(employeeId)
+        getAttendanceHistory(employeeCode)
+
+    }
+    const endWorkDay = () => {
+        workday.end(history[0].id)
+
+    }
 
     const exit = () => {
         localStorage.clear()
@@ -16,38 +35,46 @@ export const AttendanceHistory = () => {
     }
 
     return (
-            <div style={Styles.workDaysContainer}>
-                <button style={Styles.exitButton} onClick={exit}>Sair</button>
-                <div style={Styles.titles}>
-                    <div >
-                        <span>Relógio de ponto</span>
-                    </div>
-                    <div style={Styles.userContainer}>
-                        <span style={Styles.employeeCode}>{`#${employeeCode}`}</span>
-                        <span>Usuário</span>
-                    </div>
+        <div style={Styles.workDaysContainer}>
+            <button style={Styles.exitButton} onClick={exit}>Sair</button>
+            <div style={Styles.titles}>
+                <div >
+                    <span>Relógio de ponto</span>
                 </div>
-                <p style={Styles.timeCounter}>6h 13m</p>
-                <p style={Styles.titles}>Horas de hoje</p>
-                <button style={Styles.button}>Hora de Entrada</button>
-                <p style={Styles.titles}>Dias anteriores</p>
-                {history
-                    .sort((a, b) => (
-                        new Date(b.work_day_start).getTime() - new Date(a.work_day_start).getTime())
-                    )
-                    .map(({ work_day_start, work_day_end, id }) => (
-                        <div key={id} style={Styles.workDay}>
-                            <span style={Styles.date}>
-                                {extractDate(new Date(work_day_start))}
-                            </span>
-                            <span style={Styles.time}>
-                                <b>
-                                    {calculateWorkDayTime(new Date(work_day_start), new Date(work_day_end))}
-                                </b>
-                            </span>
-                        </div>
-                    ))}
+                <div style={Styles.userContainer}>
+                    <span style={Styles.employeeCode}>{`#${employeeCode}`}</span>
+                    <span>Usuário</span>
+                </div>
             </div>
+            <p style={Styles.timeCounter}>{
+                dayStarted ? calculateWorkDayTime(dayStarted, new Date()) : "0h 00m"
+            }</p>
+            <p style={Styles.titles}>Horas de hoje</p>
+            {
+                dayStarted ?
+                    (
+                        <button style={Styles.button} onClick={endWorkDay}>Hora de Saída</button>
+                    ) :
+                    (
+                        <button style={Styles.button} onClick={startWorkDay}>Hora de Entrada</button>
+                    )
+            }
+
+            <p style={Styles.titles}>Dias anteriores</p>
+            {history
+                .map(({ work_day_start, work_day_end, id }) => (
+                    <div key={id} style={Styles.workDay}>
+                        <span style={Styles.date}>
+                            {extractDate(new Date(work_day_start))}
+                        </span>
+                        <span style={Styles.time}>
+                            <b>
+                                {calculateWorkDayTime(new Date(work_day_start), new Date(work_day_end))}
+                            </b>
+                        </span>
+                    </div>
+                ))}
+        </div>
     )
 }
 
@@ -78,8 +105,6 @@ const Styles = {
     },
     time: {
         color: "#F5F5F5"
-        // fontSize: "12px",
-        // opacity: "100%"
     },
     date: {
         color: "#F5F5F5"
@@ -89,8 +114,7 @@ const Styles = {
         margin: "0 0 0 0",
         fontSize: "11.6px",
         display: "flex",
-        justifyContent: "space-between",
-        // alignItems: "center"
+        justifyContent: "space-between"
     },
     button: {
         backgroundColor: "#FE8A00",
@@ -106,7 +130,6 @@ const Styles = {
         fontSize: "23.2px"
     },
     employeeCode: {
-        // alignSelf: "end"
     },
     userContainer: {
         display: "flex",
@@ -125,9 +148,10 @@ const extractDate = (fullWorkDay: Date) => {
 const calculateWorkDayTime = (startTime: Date, endTime: Date) => {
     const elapsedMiliseconds = endTime.getTime() - startTime.getTime()
     const inMinutes = (elapsedMiliseconds / 1000) / 60
-    if (inMinutes < 60) return `${inMinutes}m`
+    if (inMinutes < 10) return `0h 0${Math.floor(inMinutes)}m`
+    if (inMinutes < 60) return `0h ${Math.floor(inMinutes)}m`
     const totalHours = Math.floor(inMinutes / 60)
     const totalMinutes = inMinutes - (totalHours * 60)
-    const getTotalMinutes = totalMinutes < 10 ? 0 + totalMinutes.toString() : totalMinutes
+    const getTotalMinutes = totalMinutes < 10 ? "0" + totalMinutes : totalMinutes
     return `${totalHours}h ${getTotalMinutes}m`
 }
