@@ -8,12 +8,16 @@ export const AttendanceHistory = () => {
 
 
     const history: EmployeeHistoryStorage = JSON.parse(localStorage.getItem("employeeHistory") || "")
-    const employeeCode: string = localStorage.getItem("employeeCode")  || "Funcionário"
+    const employeeCode: string = localStorage.getItem("employeeCode") || "Funcionário"
+
+    const exit = () => {
+        localStorage.clear()
+        window.location.reload()
+    }
 
     return (
-        <div>
-
             <div style={Styles.workDaysContainer}>
+                <button style={Styles.exitButton} onClick={exit}>Sair</button>
                 <div style={Styles.titles}>
                     <div >
                         <span>Relógio de ponto</span>
@@ -44,7 +48,6 @@ export const AttendanceHistory = () => {
                         </div>
                     ))}
             </div>
-        </div>
     )
 }
 
@@ -53,9 +56,16 @@ const Styles = {
         width: "365px",
         display: "inline-block",
         maxWidth: "92vw",
-        marginTop: "85px"
-
-    },
+        marginTop: "85px",
+        position: "relative"
+    } as React.CSSProperties,
+    exitButton: {
+        position: "absolute",
+        right: "0px",
+        top: "30px",
+        backgroundColor: "#FE8A00",
+        borderRadius: "4px"
+    } as React.CSSProperties,
     workDay: {
         backgroundColor: "rgba(217, 217, 217, 0.05)",
         marginTop: "7px",
