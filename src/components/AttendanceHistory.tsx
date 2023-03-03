@@ -8,6 +8,7 @@ export const AttendanceHistory = () => {
 
 
     const history: EmployeeHistoryStorage = JSON.parse(localStorage.getItem("employeeHistory") || "")
+    const employeeCode: string = localStorage.getItem("employeeCode")  || "Funcionário"
 
     return (
         <div>
@@ -18,7 +19,7 @@ export const AttendanceHistory = () => {
                         <span>Relógio de ponto</span>
                     </div>
                     <div style={Styles.userContainer}>
-                        <span style={Styles.employeeCode}>#4SXXFMF</span>
+                        <span style={Styles.employeeCode}>{`#${employeeCode}`}</span>
                         <span>Usuário</span>
                     </div>
                 </div>
