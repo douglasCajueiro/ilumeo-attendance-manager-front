@@ -33,7 +33,7 @@ const Styles = {
     title: {
         color: "#F5F5F5",
         marginBottom: "46px",
-        alignSelf: "start"
+        textAlign: "left"
     } as React.CSSProperties,
     input: {
         backgroundColor: "#1E2733",
