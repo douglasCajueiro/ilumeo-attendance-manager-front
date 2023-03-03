@@ -58,6 +58,7 @@ const Styles = {
         color: "#F5F5F5"
     } as React.CSSProperties,
     inputGroup: {
-        position: "relative"
+        position: "relative",
+        width: "100%"
     } as React.CSSProperties,
 }
