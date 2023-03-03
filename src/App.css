@@ -24,11 +24,8 @@ div.input-group: {
 
 input: {
   display: block;
-  /* margin-botton: 24px; */
 }
 
 button.confirm:hover {
-  cursos: "pointer"
-  /* borderRadius: "4px";
-  marginTop: "24px" */
+  cursos: "pointer";
 }

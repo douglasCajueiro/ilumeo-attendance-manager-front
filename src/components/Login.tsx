@@ -6,7 +6,6 @@ import { getAttendanceHistory } from "../services/getAttendanceHistory";
 export const Login = () => {
     const [employeeCode, setEmployeeCode] = useState<string>()
     return (
-        // <div style={{display: "inline-block"}}>
             <div className="form-container" style={Styles.formContainer}>
                 <div style={Styles.title}>Ponto <b>Ilumeo</b></div>
                 <div className="input-group" style={Styles.inputGroup}>
@@ -16,7 +15,6 @@ export const Login = () => {
                 <button className="confirm" style={Styles.button} onClick={() => getAttendanceHistory(employeeCode || "")}>Confirmar</button>
                 <ToastContainer />
             </div>
-        // </div>
     )
 }
 
