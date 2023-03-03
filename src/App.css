@@ -1,8 +1,5 @@
 .App {
   text-align: center;
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
 }
 
 div.input-group: {
@@ -24,8 +21,4 @@ div.input-group: {
 
 input: {
   display: block;
-}
-
-button.confirm:hover {
-  cursos: "pointer";
 }
